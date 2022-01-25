@@ -4,8 +4,8 @@ const cTable = require("console.table");
 
 const db = mysql.createConnection({
   host: "localhost",
-  user: "#",
-  password: "#",
+  user: "",
+  password: "",
   database: "employeesDB",
 });
 
@@ -26,7 +26,7 @@ const adminOption = () => {
       choices: [
         "View all departments",
         "View all roles",
-        "View aLL employees",
+        "View all employees",
         //"View all employees by manager",
         //"view all employees by department",
         "Add a department",
@@ -52,7 +52,7 @@ const adminOption = () => {
           break;
 
         case "View all employees":
-          viewAllEmpEmployees();
+          viewAllEmployees();
           break;
 
         // case "View all employees by manager":
@@ -109,14 +109,35 @@ const adminOption = () => {
     });
 };
 
-async function viewAllDepartments() {
+// View section departmetns / roles / employees
+
+function viewAllDepartments() {
   let query = "SELECT * FROM department";
-  db.query(query, function (err, res) {
+  db.query(query, (err, res) => {
     if (err) throw err;
     console.table("All Departments: ", res);
     adminOption();
   });
 }
 
+function viewAllRoles() {
+  let query = "SELECT * FROM role";
+  db.query(query, (err, res) => {
+    if (err) throw err;
+    console.table("All Roles: ", res);
+    adminOption();
+  });
+}
+
+function viewAllEmployees() {
+  let query = "SELECT * FROM employee";
+  db.query(query, (err, res) => {
+    if (err) throw err;
+    console.table("All Roles: ", res);
+    adminOption();
+  });
+}
+
+// Add department / role / employee
 
 adminOption();
