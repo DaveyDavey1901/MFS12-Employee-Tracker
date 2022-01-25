@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const sql = require('mysql2');
+const mysql = require('mysql2');
 
 const PORT = process.env || 3001;
 
