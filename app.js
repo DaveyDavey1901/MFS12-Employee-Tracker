@@ -16,6 +16,7 @@ db.connect((err) => {
 
 // This function i used to prompt the user to choose from a list of options.
 
+
 const adminOption = () => {
   inquirer
     .prompt({
@@ -107,5 +108,15 @@ const adminOption = () => {
       }
     });
 };
+
+async function viewAllDepartments() {
+  let query = "SELECT * FROM department";
+  db.query(query, function (err, res) {
+    if (err) throw err;
+    console.table("All Departments: ", res);
+    adminOption();
+  });
+}
+
 
 adminOption();
