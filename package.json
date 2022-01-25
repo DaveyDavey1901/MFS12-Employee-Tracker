@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/DaveyDavey1901/MFS12-Employee-Tracker#readme",
   "dependencies": {
+    "console.table": "^0.10.0",
     "inquirer": "^8.2.0",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.15"

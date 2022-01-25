@@ -1,17 +1,16 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
+const cTable = require("console.table")
 
-const PORT = process.env || 3001;
 
 const db = mysql.createConnection({
   host: "localhost",
   user: "#",
   password: "#",
-  database: "#",
+  database: "employeesDB",
 });
 
-db.connect();
-
-app.listen(PORT, () => {
-  console.log(`Server started on ${PORT}`);
+db.connect((err) => {
+  if (err) throw err;
+    console.log('Welcome you are now connected to the Employee Database');
 });
