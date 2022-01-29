@@ -1,18 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const cTable = require("console.table");
-
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "#",
-  password: "#",
-  database: "employeesDB",
-});
-
-db.connect((err) => {
-  if (err) throw err;
-  console.log("Welcome you are now connected to the Employee Database");
-});
+const db = require("./db/connection");
 
 // This function i used to prompt the user to choose from a list of options.
 
@@ -24,36 +13,50 @@ const adminOption = () => {
         "Please select an action to perform from the Employee Database.\n",
       name: "Admin",
       choices: [
-        "View all departments",
-        "View all roles",
         "View all employees",
-        //"View all employees by manager",
-        //"view all employees by department",
-        "Add a department",
-        "Add a role",
         "Add an employee",
         "Update a employee role",
+        "View all roles",
+        "Add a role",
+        "View all departments",
+        "Add a department",
+        //"View all employees by manager",
         //"Update an employee managers",
+        //"view all employees by department",
         //"Delete a department",
-        //"Delete a role",
-        "Delete a employee",
         //"Department budget",
+        //"Delete a role",
         "Exit",
-
       ],
     })
     .then((userChoice) => {
       switch (userChoice.Admin) {
-        case "View all departments":
-          viewAllDepartments();
+        case "View all employees":
+          viewAllEmployees();
+          break;
+
+        case "Add an employee":
+          addEmployee();
+          break;
+
+        case "Update an employees role":
+          updateEmployeeRole();
           break;
 
         case "View all roles":
           viewAllRoles();
           break;
 
-        case "View all employees":
-          viewAllEmployees();
+        case "Add a role":
+          addRole();
+          break;
+
+        case "View all departments":
+          viewAllDepartments();
+          break;
+
+        case "Add a department":
+          addDepartment();
           break;
 
         // case "View all employees by manager":
@@ -63,22 +66,6 @@ const adminOption = () => {
         // case "View all employees by department":
         //   viewAllEmpByDepartment();
         //   break;
-
-        case "Add a department":
-          addDepartment();
-          break;
-
-        case "Add a role":
-          addRole();
-          break;
-
-        case "Add an employee":
-          addEmployee();
-          break;
-
-        case "Update an employee's role":
-          updateEmployeeRole();
-          break;
 
         // case "Update an employee managers":
         //   updateEmpManager();
@@ -112,17 +99,40 @@ const adminOption = () => {
 
 // View section departmetns / roles / employees
 
+// This will display all the departments with the there id;
 function viewAllDepartments() {
-  const query = "SELECT * FROM department";
+  const query = "SELECT * FROM employeesdb.department";
   db.query(query, (err, res) => {
     if (err) throw err;
     console.table(res);
     adminOption();
   });
 }
-
+// This query will display all the Id, Roles, Salary and department ID. 
 function viewAllRoles() {
-  const query = "SELECT * FROM role";
+  const query = `SELECT role.id, role.title, role.salary, department.name AS department
+                    FROM role AS role
+                    INNER JOIN department AS department
+                    ON role.department_id = department.id`;
+  db.query(query, (err, res) => {
+    if (err) throw err;
+    console.table(res);
+    adminOption();
+  });
+}
+// This query returns all employee, role, department and manager information together.
+function viewAllEmployees() {
+  const query = `SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department,  
+                    CONCAT(manager.first_name, ' ', manager.last_name) AS manager
+                    FROM employee
+                    LEFT JOIN role 
+                    ON employee.role_id = role.id
+                    LEFT JOIN department 
+                    ON role.department_id = department.id 
+                    LEFT JOIN employee manager 
+                    ON manager.id = employee.manager_id;
+            `;
+    
   db.query(query, (err, res) => {
     if (err) throw err;
     console.table(res);
@@ -130,14 +140,6 @@ function viewAllRoles() {
   });
 }
 
-function viewAllEmployees() {
-  const query = "SELECT * FROM employee";
-  db.query(query, (err, res) => {
-    if (err) throw err;
-    console.table(res);
-    adminOption();
-  });
-}
 
 // Add new department / role / employee
 
@@ -192,44 +194,8 @@ function addRole() {
     });
 }
 
-function addEmployee() {
-  inquirer
-    .prompt([
-      {
-        type: "input",
-        message: "What is your first name?",
-        name: "first_name",
-      },
-      {
-        type: "input",
-        message: "What is your last name?",
-        name: "last_name",
-      },
-      {
-        type: "input",
-        message: "What is the role_id for this job?",
-        name: "role_id",
-      },
-      {
-        type: "input",
-        message: "What is the manager_id for this job?",
-        name: "manager_id",
-      },
-    ])
-    .then((res) => {
-      const query =
-        "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUE(?, ?, ?, ?)";
-      db.query(
-        query,
-        [res.first_name, res.last_name, res.role_id, res.manager_id],
-        (err, res) => {
-          if (err) throw err;
-          console.table(res);
-          adminOption();
-        }
-      );
-    });
-}
+//Add new employee
+//update an employee
 
 function exitApp() {
   db.close();
