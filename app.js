@@ -1,5 +1,4 @@
 const inquirer = require("inquirer");
-const mysql = require("mysql2");
 const cTable = require("console.table");
 const db = require("./db/connection");
 
@@ -108,7 +107,7 @@ function viewAllDepartments() {
     adminOption();
   });
 }
-// This query will display all the Id, Roles, Salary and department ID. 
+// This query will display all the Id, Roles, Salary and department ID.
 function viewAllRoles() {
   const query = `SELECT role.id, role.title, role.salary, department.name AS department
                     FROM role AS role
@@ -132,16 +131,13 @@ function viewAllEmployees() {
                     LEFT JOIN employee manager 
                     ON manager.id = employee.manager_id;
             `;
-    
+
   db.query(query, (err, res) => {
     if (err) throw err;
     console.table(res);
     adminOption();
   });
 }
-
-
-// Add new department / role / employee
 
 function addDepartment() {
   inquirer
@@ -193,9 +189,57 @@ function addRole() {
       );
     });
 }
+function addEmployee() {
+  db.query("SELECT * FROM role", (err, res) => {
+    if (err) throw err; 
 
-//Add new employee
-//update an employee
+    
+    let roleList = res.map((role) => {
+      return {
+        name: role.title,
+        value: role.id,
+      };
+    });
+
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is your first name?",
+          name: "first_name",
+        },
+        {
+          type: "input",
+          message: "What is your last name?",
+          name: "last_name",
+        },
+        {
+          type: "list",
+          message: "What is your role for this job?",
+          name: "role_id",
+          choices: roleList,
+        },
+        {
+          type: "input",
+          message: "What is the manager_id for this job?",
+          name: "manager_id",
+        },
+      ])
+      .then((res) => {
+        const query =
+          "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUE(?, ?, ?, ?)";
+        db.query(
+          query,
+          [res.first_name, res.last_name, res.role_id, res.manager_id],
+          (err, res) => {
+            if (err) throw err;
+            console.table(res);
+            adminOption();
+          }
+        );
+      });
+  });
+}
 
 function exitApp() {
   db.close();
