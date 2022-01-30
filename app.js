@@ -95,7 +95,7 @@ const adminOption = () => {
       }
     });
 };
-
+// Use 
 // View section departmetns / roles / employees
 
 // This will display all the departments with the there id;
@@ -140,9 +140,9 @@ function viewAllEmployees() {
 }
 
 //Add a new Department, Role and Employee
-
+// This function / query adds a new department
 function addDepartment() {
-  inquirer
+    inquirer
     .prompt({
       type: "input",
       message: "What is the new department name?",
@@ -157,8 +157,9 @@ function addDepartment() {
       });
     });
 }
-
+// This function / query adds a new role
 function addRole() {
+  
   inquirer
     .prompt([
       {
@@ -284,7 +285,9 @@ function updateEmpRole() {
 function exitApp() {
   db.close();
 }
-// Add update managers / employee role
+// update managers 
+// view all employees by manager
+// view all employees by department
 // Add delete / role / employee / department
 // Add budget for departments
 adminOption();
