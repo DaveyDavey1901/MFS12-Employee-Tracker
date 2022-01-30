@@ -1,12 +1,11 @@
-#:small_orange_diamond: MFS12-Employee-Tracker
+# :small_orange_diamond: MFS12-Employee-Tracker
 ## Table of Contents:
   1. [Description](#Description) 
   2. [Installation](#Installation)
   3. [Usage](#Usage)  
   4. [Contributing](#Contributing-and-Resources)
   5. [GitHub Repository](#Repository-Details-Link)
-  6. [Tests](#Tests)
-  4. [License](#License-Link)
+  6. [License](#License-Link)
   7. [GitHub](#GitHub-Account)
   8. [E-mail](#E-mail)
 ## :small_blue_diamond: Description
